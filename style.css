@@ -1,0 +1,262 @@
+body {   font-family: 'Noto Sans KR', Arial, sans-serif;
+  background: url('background.jpg') no-repeat center center fixed;
+  background-size: cover;
+  margin: 40px;
+  font-size: 18px;}
+    form { background: #fff; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,.08); padding: 28px; max-width: 700px; }
+    
+    /* --- 제목과 버튼 정렬 --- */
+    #headerContainer {
+      display: flex;
+      align-items: center; /* 세로 중앙 정렬 */
+      gap: 15px; /* 제목과 버튼 사이 간격 */
+      margin-bottom: 25px; /* 폼과의 간격 확보 */
+    }
+    /* 제목 (h2)의 마진을 제거하여 중앙 정렬을 보조 */
+    #mainTitle {
+      font-size: 2.1em; 
+      font-weight: 900; 
+      letter-spacing: -1px; 
+      margin: 0; /* 상하좌우 마진 완전히 제거 */
+    }
+    
+    /* --- 이미지 버튼 (#linkBtn) 최종 스타일 영역 --- */
+    #linkBox {
+      position: static;
+      top: auto;
+      right: auto;
+      z-index: auto;
+    }
+    #linkBtn {
+      /* 이미지 버튼을 위한 크기 및 배경 설정 */
+      width: 200px; 
+      height: 50px; 
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      transition: transform 0.15s, box-shadow 0.15s;
+      
+      /* 이미지 URL 적용 */
+      background: url('https://img.freepik.com/free-vector/flat-design-autumnal-background_52683-43406.jpg') no-repeat center center;
+      background-size: cover; 
+      background-color: #f7f7f7; 
+      
+      /* 글자 표시 및 스타일 */
+      color: #e9baaa; /* 흰색 글자색 */
+      font-size: 18px; 
+      font-weight: bold; 
+      text-align: center;
+      line-height: 50px; /* 수직 중앙 정렬 */
+      
+      /* 검은색 텍스트 테두리 (윤곽선) */
+      text-shadow: 
+        -1px -1px 0 #000000,
+         1px -1px 0 #000000,
+        -1px  1px 0 #000000,
+         1px  1px 0 #000000;
+         
+      /* 이전에 글자 숨김을 위해 설정했던 속성 초기화 */
+      text-indent: 0; 
+      overflow: visible; 
+      padding: 0;
+    }
+    #linkBtn:hover {
+      /* 호버 시 버튼이 살짝 떠오르는 효과 */
+      transform: translateY(-2px); 
+      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.25);
+      background-color: inherit; 
+      background-image: inherit; /* 배경 이미지는 그대로 유지 */
+      text-shadow: 
+        -1px -1px 0 #000000,
+         1px -1px 0 #000000,
+        -1px  1px 0 #000000,
+         1px  1px 0 #000000,
+         0 0 10px rgba(255, 255, 255, 0.7); /* 호버 시 흰색 발광 효과 추가 */
+    }
+    /* --- 이미지 버튼 (#linkBtn) 최종 스타일 영역 끝 --- */
+    
+    #patchBox { position: fixed; top: 80px; right: 80px; z-index: 1050; }
+    #patchBtn {
+      background: #fae100;
+      color: #333;
+      border-radius: 12px;
+      font-weight: bold;
+      padding: 11px 28px;
+      border: none;
+      font-size: 18px;
+      box-shadow: 0 2px 8px #e0e0e0;
+      cursor: pointer;
+      transition: background 0.18s;
+    }
+    #patchBtn:hover { background: #ffe260; }
+    #patchModal {
+      display: none;
+      position: fixed;
+      left: 0; top: 0; width: 100vw; height: 100vh;
+      background: rgba(0,0,0,0.28);
+      z-index: 20000;
+      align-items: center;
+      justify-content: center;
+    }
+    #patchModal .modal-content {
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 6px 32px rgba(0,0,0,0.13);
+      padding: 38px 32px 32px 32px;
+      max-width: 400px;
+      margin: auto;
+      position: relative;
+      animation: patchpop 0.16s cubic-bezier(.68,-0.22,.29,1.26);
+    }
+    @keyframes patchpop {
+      0% { transform: scale(0.97) translateY(40px); opacity: 0.3;}
+      100% { transform: scale(1) translateY(0); opacity: 1;}
+    }
+    #patchModal h3 {margin-top:0; font-size:1.22em; font-weight:800;}
+    #closePatchModal {
+      position: absolute; top:10px; right:16px; border:none;
+      background:none; font-size:21px; font-weight:bold; color:#aaa; cursor:pointer;
+    }
+    #patchModal ul {font-size:16px; margin:16px 0 0 0; padding-left:18px;}
+    .form-group {
+      margin-bottom: 28px;
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    label {
+      font-weight: bold;
+      margin-right: 8px;
+      font-size: 17px;
+      min-width: 110px;
+      text-align: left;
+    }
+    input[type="text"], select, input[type="date"], input[type="button"] {
+      padding: 0 16px; border-radius: 7px; border: 1px solid #bbb;
+      font-size: 17px; height: 48px; box-sizing: border-box; background: #fff;
+    }
+    #courseSelectorBtn { width: 400px; background: #f6f8fa; text-align: left; cursor: pointer; }
+    #selectedCourseLabel { display: inline-block; width: 330px; vertical-align: middle; font-size: 17px; padding-left: 5px; color: #1a1a1a;}
+    #courseTreeMenuWrap {
+      position: absolute; z-index: 9999; background: #fff;
+      border: 1px solid #bbb; border-radius: 10px; margin-top: 5px;
+      box-shadow: 0 8px 18px rgba(0,0,0,0.12); width: 400px; display: none;
+    }
+    #courseSearchBox { width: 96%; margin:10px 2% 0 2%; height: 38px; font-size:16px; border: 1px solid #d0d0d0; border-radius:7px; box-sizing: border-box; padding-left:12px;}
+    #courseTreeMenu ul { list-style:none; padding:0; margin:0;}
+    #courseTreeMenu > ul > li {
+      padding: 12px 18px 11px 14px; font-size:18px; font-weight:700; background:#f4f4f7; cursor:pointer; border-bottom:1px solid #eee;
+    }
+    #courseTreeMenu > ul > li:hover { background: #e4ecf5;}
+    #courseTreeMenu ul li ul {
+      background: #fff; border-radius:0 0 10px 10px; border:none;
+      max-height: 400px; overflow-y: auto; margin-top:2px;
+    }
+    #courseTreeMenu ul li ul li {
+      font-size:17px; font-weight:400;
+      padding:11px 22px 11px 28px; background:#fff; border-bottom:1px solid #f2f2f2; cursor:pointer;
+      transition:background 0.2s;
+    }
+    #courseTreeMenu ul li ul li:last-child { border-bottom:none;}
+    #courseTreeMenu ul li ul li:hover { background:#eaf5ff; color:#12598e;}
+    .option-group { margin: 13px 0 0 120px; z-index:2; position:relative;}
+    .option-row { margin-bottom: 10px; }
+    .option-group label { margin-right: 22px; font-weight: normal; display: block; margin-bottom: 3px;}
+    .option-group input[type="checkbox"], .option-group input[type="radio"] { transform: scale(1.12); margin-right:4px; vertical-align:middle; }
+    .inline-block { display: inline-block; }
+    .checkbox-group label { margin-right: 26px; }
+    button { background: #2078bf; color: #fff; border: none; border-radius: 4px; padding: 13px 38px; font-size: 17px; margin-top: 12px; cursor: pointer; }
+    button:hover { background: #12598e; }
+    
+    /* AP 개별 출력 및 일반 단일 결과 출력 컨테이너 */
+    #resultsContainer { 
+      margin-top: 32px; 
+      max-width: 540px; 
+      font-size: 17px;
+    }
+    .ap-result-item { 
+      background: #fff; 
+      border: 1px solid #c6c6c6; 
+      border-radius: 7px; 
+      padding: 22px; 
+      margin-bottom: 15px;
+    }
+    .ap-result-item p { margin: 10px 0; }
+    .ap-warning { color:#c44;font-size:15px;margin-top:8px;display:inline-block; }
+
+    #toast { visibility: hidden; background: #222; color: #fff; position: fixed; top: 36px; left: 36px; border-radius: 4px; padding: 13px 24px; opacity: 0; z-index: 10000; transition: opacity .5s; font-size: 17px;}
+    .ui-datepicker { font-size:17px; z-index:10010 !important;}
+    .select2-container { font-size: 17px; }
+    .select2-dropdown { z-index: 100000 !important; }
+    .form-group.duration { z-index:110 !important; }
+    .form-group.discount { z-index:10 !important; }
+    body, form, .form-group { overflow: visible !important; }
+    .form-group.duration .select2-container { width: 20% !important; min-width: 88px !important; max-width: 120px !important; text-align:left !important;}
+    .form-group.duration .select2-selection { height: 48px !important; padding: 7px 0 7px 16px !important; font-size: 17px !important; border-radius: 7px; text-align:left !important;}
+    
+    /* --- 추가된 AP 과목 관련 스타일 --- */
+    .ap-course-item {
+        margin-top: 20px;
+        padding: 15px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        background: #fcfcfc;
+        position: relative;
+    }
+    .ap-course-item .course-title {
+        font-weight: bold;
+        color: #333;
+        margin-bottom: 10px;
+        display: block;
+    }
+    .ap-course-item .remove-btn {
+        position: absolute;
+        top: 8px;
+        right: 8px;
+        background: #f44;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        padding: 4px 8px;
+        font-size: 14px;
+        cursor: pointer;
+    }
+    .ap-option-row {
+        display: flex;
+        align-items: center;
+        margin-bottom: 10px;
+        gap: 15px;
+    }
+    .ap-option-row label {
+        min-width: 70px;
+        font-weight: normal;
+        margin: 0;
+    }
+    .ap-option-row select {
+        /* 수정사항 반영: 너비 163px */
+        width: 163px !important;
+        height: 40px !important;
+        font-size: 16px !important;
+        padding: 0 10px !important;
+    }
+    .ap-option-row input[type="radio"] {
+        transform: scale(1);
+    }
+    #addAPCourseBtn {
+        background: #5cb85c; 
+        padding: 10px 20px; 
+        margin-left: 124px; 
+        margin-top: 0;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    /* AP 다중 선택 모드일 때 기존 과목 선택 버튼 숨김 */
+    .ap-multiselect-active #courseSelectorBtn, 
+    .ap-multiselect-active #selectedCourseLabel {
+      display: none;
+    }
+    /* AP 다중 선택 모드일 때 기간은 숨김 (기간은 과목별로 설정) */
+    .ap-multiselect-active .form-group.duration {
+      display: none !important;
+    }
