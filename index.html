@@ -1,0 +1,869 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>2025 겨울특강 수강료 계산기</title>
+  <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+  <style>
+    body {   font-family: 'Noto Sans KR', Arial, sans-serif;
+  background: url('background.jpg') no-repeat center center fixed;
+  background-size: cover;
+  margin: 40px;
+  font-size: 18px;}
+    form { background: #fff; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,.08); padding: 28px; max-width: 700px; }
+    
+    /* --- 제목과 버튼 정렬 --- */
+    #headerContainer {
+      display: flex;
+      align-items: center; /* 세로 중앙 정렬 */
+      gap: 15px; /* 제목과 버튼 사이 간격 */
+      margin-bottom: 25px; /* 폼과의 간격 확보 */
+    }
+    /* 제목 (h2)의 마진을 제거하여 중앙 정렬을 보조 */
+    #mainTitle {
+      font-size: 2.1em; 
+      font-weight: 900; 
+      letter-spacing: -1px; 
+      margin: 0; /* 상하좌우 마진 완전히 제거 */
+    }
+    
+    /* --- 이미지 버튼 (#linkBtn) 최종 스타일 영역 --- */
+    #linkBox {
+      position: static;
+      top: auto;
+      right: auto;
+      z-index: auto;
+    }
+    #linkBtn {
+      /* 이미지 버튼을 위한 크기 및 배경 설정 */
+      width: 200px; 
+      height: 50px; 
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      transition: transform 0.15s, box-shadow 0.15s;
+      
+      /* 이미지 URL 적용 */
+      background: url('https://img.freepik.com/free-vector/flat-design-autumnal-background_52683-43406.jpg') no-repeat center center;
+      background-size: cover; 
+      background-color: #f7f7f7; 
+      
+      /* 글자 표시 및 스타일 */
+      color: #e9baaa; /* 흰색 글자색 */
+      font-size: 18px; 
+      font-weight: bold; 
+      text-align: center;
+      line-height: 50px; /* 수직 중앙 정렬 */
+      
+      /* 검은색 텍스트 테두리 (윤곽선) */
+      text-shadow: 
+        -1px -1px 0 #000000,
+         1px -1px 0 #000000,
+        -1px  1px 0 #000000,
+         1px  1px 0 #000000;
+         
+      /* 이전에 글자 숨김을 위해 설정했던 속성 초기화 */
+      text-indent: 0; 
+      overflow: visible; 
+      padding: 0;
+    }
+    #linkBtn:hover {
+      /* 호버 시 버튼이 살짝 떠오르는 효과 */
+      transform: translateY(-2px); 
+      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.25);
+      background-color: inherit; 
+      background-image: inherit; /* 배경 이미지는 그대로 유지 */
+      text-shadow: 
+        -1px -1px 0 #000000,
+         1px -1px 0 #000000,
+        -1px  1px 0 #000000,
+         1px  1px 0 #000000,
+         0 0 10px rgba(255, 255, 255, 0.7); /* 호버 시 흰색 발광 효과 추가 */
+    }
+    /* --- 이미지 버튼 (#linkBtn) 최종 스타일 영역 끝 --- */
+    
+    #patchBox { position: fixed; top: 80px; right: 80px; z-index: 1050; }
+    #patchBtn {
+      background: #fae100;
+      color: #333;
+      border-radius: 12px;
+      font-weight: bold;
+      padding: 11px 28px;
+      border: none;
+      font-size: 18px;
+      box-shadow: 0 2px 8px #e0e0e0;
+      cursor: pointer;
+      transition: background 0.18s;
+    }
+    #patchBtn:hover { background: #ffe260; }
+    #patchModal {
+      display: none;
+      position: fixed;
+      left: 0; top: 0; width: 100vw; height: 100vh;
+      background: rgba(0,0,0,0.28);
+      z-index: 20000;
+      align-items: center;
+      justify-content: center;
+    }
+    #patchModal .modal-content {
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 6px 32px rgba(0,0,0,0.13);
+      padding: 38px 32px 32px 32px;
+      max-width: 400px;
+      margin: auto;
+      position: relative;
+      animation: patchpop 0.16s cubic-bezier(.68,-0.22,.29,1.26);
+    }
+    @keyframes patchpop {
+      0% { transform: scale(0.97) translateY(40px); opacity: 0.3;}
+      100% { transform: scale(1) translateY(0); opacity: 1;}
+    }
+    #patchModal h3 {margin-top:0; font-size:1.22em; font-weight:800;}
+    #closePatchModal {
+      position: absolute; top:10px; right:16px; border:none;
+      background:none; font-size:21px; font-weight:bold; color:#aaa; cursor:pointer;
+    }
+    #patchModal ul {font-size:16px; margin:16px 0 0 0; padding-left:18px;}
+    .form-group {
+      margin-bottom: 28px;
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    label {
+      font-weight: bold;
+      margin-right: 8px;
+      font-size: 17px;
+      min-width: 110px;
+      text-align: left;
+    }
+    input[type="text"], select, input[type="date"], input[type="button"] {
+      padding: 0 16px; border-radius: 7px; border: 1px solid #bbb;
+      font-size: 17px; height: 48px; box-sizing: border-box; background: #fff;
+    }
+    #courseSelectorBtn { width: 400px; background: #f6f8fa; text-align: left; cursor: pointer; }
+    #selectedCourseLabel { display: inline-block; width: 330px; vertical-align: middle; font-size: 17px; padding-left: 5px; color: #1a1a1a;}
+    #courseTreeMenuWrap {
+      position: absolute; z-index: 9999; background: #fff;
+      border: 1px solid #bbb; border-radius: 10px; margin-top: 5px;
+      box-shadow: 0 8px 18px rgba(0,0,0,0.12); width: 400px; display: none;
+    }
+    #courseSearchBox { width: 96%; margin:10px 2% 0 2%; height: 38px; font-size:16px; border: 1px solid #d0d0d0; border-radius:7px; box-sizing: border-box; padding-left:12px;}
+    #courseTreeMenu ul { list-style:none; padding:0; margin:0;}
+    #courseTreeMenu > ul > li {
+      padding: 12px 18px 11px 14px; font-size:18px; font-weight:700; background:#f4f4f7; cursor:pointer; border-bottom:1px solid #eee;
+    }
+    #courseTreeMenu > ul > li:hover { background: #e4ecf5;}
+    #courseTreeMenu ul li ul {
+      background: #fff; border-radius:0 0 10px 10px; border:none;
+      max-height: 400px; overflow-y: auto; margin-top:2px;
+    }
+    #courseTreeMenu ul li ul li {
+      font-size:17px; font-weight:400;
+      padding:11px 22px 11px 28px; background:#fff; border-bottom:1px solid #f2f2f2; cursor:pointer;
+      transition:background 0.2s;
+    }
+    #courseTreeMenu ul li ul li:last-child { border-bottom:none;}
+    #courseTreeMenu ul li ul li:hover { background:#eaf5ff; color:#12598e;}
+    .option-group { margin: 13px 0 0 120px; z-index:2; position:relative;}
+    .option-row { margin-bottom: 10px; }
+    .option-group label { margin-right: 22px; font-weight: normal; display: block; margin-bottom: 3px;}
+    .option-group input[type="checkbox"], .option-group input[type="radio"] { transform: scale(1.12); margin-right:4px; vertical-align:middle; }
+    .inline-block { display: inline-block; }
+    .checkbox-group label { margin-right: 26px; }
+    button { background: #2078bf; color: #fff; border: none; border-radius: 4px; padding: 13px 38px; font-size: 17px; margin-top: 12px; cursor: pointer; }
+    button:hover { background: #12598e; }
+    #reservationInfo { margin-top: 32px; background: #fff; border: 1px solid #c6c6c6; border-radius: 7px; padding: 22px; max-width: 540px; font-size: 17px;}
+    #reservationInfo p { margin: 10px 0; }
+    #toast { visibility: hidden; background: #222; color: #fff; position: fixed; top: 36px; left: 36px; border-radius: 4px; padding: 13px 24px; opacity: 0; z-index: 10000; transition: opacity .5s; font-size: 17px;}
+    .ui-datepicker { font-size:17px; z-index:10010 !important;}
+    .select2-container { font-size: 17px; }
+    .select2-dropdown { z-index: 100000 !important; }
+    .form-group.duration { z-index:110 !important; }
+    .form-group.discount { z-index:10 !important; }
+    body, form, .form-group { overflow: visible !important; }
+    .form-group.duration .select2-container { width: 20% !important; min-width: 88px !important; max-width: 120px !important; text-align:left !important;}
+    .form-group.duration .select2-selection { height: 48px !important; padding: 7px 0 7px 16px !important; font-size: 17px !important; border-radius: 7px; text-align:left !important;}
+  </style>
+</head>
+<body>
+  
+  <div id="headerContainer">
+    <h2 id="mainTitle">2025 겨울특강 수강료 계산기</h2>
+    <div id="linkBox" style="position: static;">
+      <button id="linkBtn" type="button" data-href="https://www.example.com">가을학기</button>
+    </div>
+  </div>
+  
+  <div id="patchBox">
+    <button id="patchBtn" type="button">패치내역</button>
+  </div>
+  <div id="patchModal">
+    <div class="modal-content">
+      <button id="closePatchModal">×</button>
+      <h3>패치내역 ver 1.0.0</h3>
+      <ul>
+<li><b><span style="color:red">사용은 자유이나 오안내에 대한 책임은 각자에게 있습니다</span></b></li>
+<li><b><span style="color:green">개선사항 및 버그는 정하민 주임에게 보고</span></b></li>
+<li>-------------------------------------------------------</li>
+        <li>2025-12-01: 2025 겨울특강 수강료 계산기 출시</li>
+      </ul>
+    </div>
+  </div>
+
+  <form id="tuitionForm" autocomplete="off" style="position:relative;">
+    <div class="form-group">
+      <label for="studentName">학생 이름</label>
+      <input type="text" id="studentName" required placeholder="이름 입력">
+    </div>
+    <div class="form-group" style="position:relative;z-index:120;">
+      <label for="courseSelectorBtn">수강 과목</label>
+      <input type="button" id="courseSelectorBtn" value="과목을 선택하세요" readonly>
+      <span id="selectedCourseLabel"></span>
+      <div id="courseTreeMenuWrap">
+        <input type="text" id="courseSearchBox" placeholder="과목 검색">
+        <nav id="courseTreeMenu"></nav>
+      </div>
+      <select id="course" style="display:none"></select>
+    </div>
+    <div class="form-group" id="startDateGroup">
+      <label for="startDate">수강 시작일</label>
+      <input type="text" id="startDate" required autocomplete="off" placeholder="날짜 선택">
+    </div>
+    <div id="extraOptions"></div>
+    <div class="form-group duration">
+      <label id="durationLabel" for="duration">수강 기간</label>
+      <select id="duration" required></select>
+    </div>
+    <div class="form-group discount">
+      <label for="discount">할인율</label>
+      <select id="discount" required>
+        <option value="0">0%</option>
+        <option value="0.05">5%</option>
+        <option value="0.10">10%</option>
+        <option value="0.15">15%</option>
+        <option value="0.20">20%</option>
+        <option value="0.25">25%</option>
+      </select>
+    </div>
+    <button type="button" onclick="calculateTuition()">계산하기</button>
+  </form>
+  <div id="reservationInfo" style="display:none;">
+    <p>▶ <b>학생이름</b>: <span id="infoName"></span></p>
+    <p>▶ <b>수강과목</b>: <span id="infoCourse"></span></p>
+    <p>▶ <b>수강기간</b>: <span id="infoStart"></span></p>
+    <p>▶ <b>수업시간</b>: <span id="infoTime"></span></p>
+    <p>▶ <b>수강료</b>: <span id="infoFee"></span></p>
+  </div>
+  <button id="copyButton" onclick="copyReservationInfo()" style="display:none;">복사</button>
+  <div id="toast"></div>
+
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/i18n/jquery-ui-i18n.min.js"></script>
+<script>
+    $('#patchBtn').on('click', function(){
+      $('#patchModal').fadeIn(120);
+    });
+    $('#closePatchModal, #patchModal').on('click', function(e){
+      if (e.target === this) $('#patchModal').fadeOut(100);
+    });
+    
+    // 새 링크 버튼 이벤트 핸들러 추가
+    $('#linkBtn').on('click', function(){
+      const url = $(this).data('href');
+      if (url) {
+        window.location.href = url; // 현재 탭에서 열기
+      }
+    });
+  </script>
+  <script>
+const weekdayName = ['일', '월', '화', '수', '목', '금', '토'];
+
+const courseTree = [
+  {cat:'SAT', items:[
+    {val:'sat_1500', label:'겨울특강 SAT 1500+'},
+    {val:'sat_1400', label:'겨울특강 SAT 1400+'},
+    {val:'sat_bridge', label:'겨울특강 SAT 브릿지'},
+    {val:'sat_america', label:'겨울특강 SAT 아메리카반'},
+    {val:'sat_europe', label:'겨울특강 SAT 유럽반'},
+    {val:'sat_rw', label:'겨울특강 SAT RW실전반'}
+  ]},
+  {cat:'AP', items:[
+    {val:'ap_phy1', label:'겨울특강 AP Phy1'},
+    {val:'ap_calbc', label:'겨울특강 AP Cal BC'},
+    {val:'ap_calab', label:'겨울특강 AP Cal AB'},
+    {val:'ap_precal', label:'겨울특강 AP Pre-cal'},
+    {val:'ap_worldhis', label:'겨울특강 AP World His'},
+    {val:'ap_bio', label:'겨울특강 AP Bio'},
+    {val:'ap_phyc_m', label:'겨울특강 AP Phy C-M'},
+    {val:'ap_macroecon', label:'겨울특강 AP Macro Econ'},
+    {val:'ap_microecon', label:'겨울특강 AP Micro Econ'},
+    {val:'ap_psy', label:'겨울특강 AP Psy'},
+    {val:'ap_stat', label:'겨울특강 AP Stat'},
+    {val:'ap_chem', label:'겨울특강 AP Chem'},
+    {val:'ap_comsca', label:'겨울특강 AP Com.sc A'}
+  ]},
+  {cat:'TOEFL', items:[
+    {val:'toefl_l1', label:'겨울특강 TOEFL L1'},
+    {val:'toefl_l2', label:'겨울특강 TOEFL L2'},
+    {val:'toefl_america', label:'겨울특강 TOEFL 미주반'},
+    {val:'toefl_awesome', label:'겨울특강 어썸실전'}
+  ]},
+  {cat:'DRW', items:[
+    {val:'drw_morning', label:'겨울특강 DRW 오전'},
+    {val:'drw_a', label:'겨울특강 DRW A'},
+    {val:'drw_b', label:'겨울특강 DRW B'},
+    {val:'drw_l3', label:'겨울특강 DRW L3'}
+  ]},
+  {cat:'W올인원', items:[
+    {val:'w_allinone', label:'겨울특강 Writing 올인원'}
+  ]},
+  {cat:'Drill Math', items:[
+    {val:'dm_alg1', label:'겨울특강 Algebra 1'},
+    {val:'dm_alg2', label:'겨울특강 Algebra 2'},
+    {val:'dm_alg2adv', label:'겨울특강 Algebra 2 심화'}
+  ]}
+];
+
+const courseInfo = {
+  sat_1500: {name:"겨울특강 SAT 1500+", min:1, max:4, durationType:"week", fee:950000, days:[1]},
+  sat_1400: {name:"겨울특강 SAT 1400+", min:1, max:4, durationType:"week", fee:950000, days:[1]},
+  sat_bridge: {name:"겨울특강 SAT 브릿지", min:1, max:4, durationType:"week", fee:950000, days:[1]},
+  sat_america: {name:"겨울특강 SAT 아메리카반", min:1, max:4, durationType:"week", fee:620000, days:[1]},
+  sat_europe: {name:"겨울특강 SAT 유럽반", min:1, max:4, durationType:"week", fee:620000, days:[1]},
+  sat_rw: {name:"겨울특강 SAT RW실전반", min:1, max:4, durationType:"week", fee:248000, days:[6], endDay:0},
+  
+  ap_phy1: {name:"겨울특강 AP Phy1", min:1, max:3, durationType:"week", fee:575000, days:[1], isAP:true},
+  ap_calbc: {name:"겨울특강 AP Cal BC", min:1, max:3, durationType:"week", fee:575000, days:[1], isAP:true},
+  ap_calab: {name:"겨울특강 AP Cal AB", min:1, max:3, durationType:"week", fee:460000, days:[1], isAP:true, endDay:2},
+  ap_precal: {name:"겨울특강 AP Pre-cal", min:1, max:3, durationType:"week", fee:575000, days:[1], isAP:true},
+  ap_worldhis: {name:"겨울특강 AP World His", min:1, max:3, durationType:"week", fee:575000, days:[1], isAP:true},
+  ap_bio: {name:"겨울특강 AP Bio", min:1, max:3, durationType:"week", fee:575000, days:[1], isAP:true},
+  ap_phyc_m: {name:"겨울특강 AP Phy C-M", min:1, max:3, durationType:"week", fee:575000, days:[1], isAP:true},
+  ap_macroecon: {name:"겨울특강 AP Macro Econ", min:1, max:3, durationType:"week", fee:345000, days:[1], isAP:true},
+  ap_microecon: {name:"겨울특강 AP Micro Econ", min:1, max:3, durationType:"week", fee:345000, days:[2], isAP:true, endDay:6},
+  ap_psy: {name:"겨울특강 AP Psy", min:1, max:3, durationType:"week", fee:575000, days:[1], isAP:true},
+  ap_stat: {name:"겨울특강 AP Stat", min:1, max:3, durationType:"week", fee:575000, days:[1], isAP:true},
+  ap_chem: {name:"겨울특강 AP Chem", min:1, max:3, durationType:"week", fee:575000, days:[1], isAP:true},
+  ap_comsca: {name:"겨울특강 AP Com.sc A", min:1, max:3, durationType:"week", fee:575000, days:[1], isAP:true},
+  
+  toefl_l1: {name:"겨울특강 TOEFL L1", min:1, max:4, durationType:"week", fee:540000, days:[1]},
+  toefl_l2: {name:"겨울특강 TOEFL L2", min:1, max:4, durationType:"week", fee:540000, days:[1]},
+  toefl_america: {name:"겨울특강 TOEFL 미주반", min:1, max:4, durationType:"week", fee:540000, days:[1]},
+  toefl_awesome: {name:"겨울특강 어썸실전", min:1, max:6, durationType:"set", fee:198000, days:[6]},
+  
+  drw_morning: {name:"겨울특강 DRW 오전", min:1, max:3, durationType:"week", fee:360000, days:[1]},
+  drw_a: {name:"겨울특강 DRW A", min:1, max:3, durationType:"week", fee:360000, days:[1]},
+  drw_b: {name:"겨울특강 DRW B", min:1, max:3, durationType:"week", fee:360000, days:[1]},
+  drw_l3: {name:"겨울특강 DRW L3", min:1, max:3, durationType:"week", fee:360000, days:[1]},
+  
+  w_allinone: {name:"겨울특강 Writing 올인원", min:1, max:3, durationType:"week", fee:480000, days:[1]},
+  
+  dm_alg1: {name:"겨울특강 Algebra 1", min:1, max:3, durationType:"week", fee:265000, days:[1]},
+  dm_alg2: {name:"겨울특강 Algebra 2", min:1, max:3, durationType:"week", fee:265000, days:[1]},
+  dm_alg2adv: {name:"겨울특강 Algebra 2 심화", min:1, max:3, durationType:"week", fee:265000, days:[1]}
+};
+
+const timeTable = {
+  "겨울특강 SAT 1500+": {
+    "온라인": "13:00~21:00",
+    "오프라인": "09:00~17:00"
+  },
+  "겨울특강 SAT 1400+": {
+    "온라인": "13:00~21:00",
+    "오프라인": "09:00~17:00"
+  },
+  "겨울특강 SAT 브릿지": {
+    "온라인": "13:00~21:00",
+    "오프라인": "09:00~17:00"
+  },
+  "겨울특강 SAT 아메리카반": "09:00~13:00",
+  "겨울특강 SAT 유럽반": "17:00~21:00",
+  "겨울특강 SAT RW실전반": "10:00~14:00",
+  
+  "겨울특강 AP Phy1": {"1차":"18:20~20:20", "2차":"09:00~11:00", "3차오전":"09:00~11:00", "3차저녁":"18:20~20:20"},
+  "겨울특강 AP Cal BC": {"1차":"18:20~20:20", "2차":"09:00~11:00", "3차오전":"09:00~11:00", "3차저녁":"18:20~20:20"},
+  "겨울특강 AP Cal AB": {"1차":"18:20~20:20", "2차":"09:00~11:00", "3차오전":"09:00~11:00", "3차저녁":"18:20~20:20"},
+  "겨울특강 AP Pre-cal": {"1차":"18:20~20:20", "2차":"09:00~11:00", "3차오전":"09:00~11:00", "3차저녁":"18:20~20:20"},
+  "겨울특강 AP World His": {"1차":"18:20~20:20", "2차":"09:00~11:00", "3차오전":"09:00~11:00", "3차저녁":"18:20~20:20"},
+  "겨울특강 AP Bio": {"1차":"18:20~20:20", "2차":"09:00~11:00", "3차오전":"09:00~11:00", "3차저녁":"18:20~20:20"},
+  "겨울특강 AP Phy C-M": {"1차":"20:30~22:30", "2차":"11:10~13:10", "3차오전":"11:10~13:10", "3차저녁":"20:30~22:30"},
+  "겨울특강 AP Macro Econ": {"1차":"20:30~22:30", "2차":"11:10~13:10", "3차오전":"11:10~13:10", "3차저녁":"20:30~22:30"},
+  "겨울특강 AP Micro Econ": {"1차":"20:30~22:30", "2차":"11:10~13:10", "3차오전":"11:10~13:10", "3차저녁":"20:30~22:30"},
+  "겨울특강 AP Psy": {"1차":"20:30~22:30", "2차":"11:10~13:10", "3차오전":"11:10~13:10", "3차저녁":"20:30~22:30"},
+  "겨울특강 AP Stat": {"1차":"20:30~22:30", "2차":"11:10~13:10", "3차오전":"11:10~13:10", "3차저녁":"20:30~22:30"},
+  "겨울특강 AP Chem": {"1차":"20:30~22:30", "2차":"11:10~13:10", "3차오전":"11:10~13:10", "3차저녁":"20:30~22:30"},
+  "겨울특강 AP Com.sc A": {"1차":"20:30~22:30", "2차":"11:10~13:10", "3차오전":"11:10~13:10", "3차저녁":"20:30~22:30"},
+  
+  "겨울특강 TOEFL L1": {
+    "온라인": "13:30~17:30",
+    "오프라인": "09:00~13:00"
+  },
+  "겨울특강 TOEFL L2": {
+    "온라인": "13:30~17:30",
+    "오프라인": "09:00~13:00"
+  },
+  "겨울특강 TOEFL 미주반": "09:00~13:00",
+  "겨울특강 어썸실전": "11:00~14:00",
+  
+  "겨울특강 DRW 오전": "10:00~13:00",
+  "겨울특강 DRW A": "19:00~22:00",
+  "겨울특강 DRW B": "20:00~23:00",
+  "겨울특강 DRW L3": "20:00~23:00",
+  
+  "겨울특강 Writing 올인원": "09:00~13:00",
+  
+  "겨울특강 Algebra 1": "14:00~16:00",
+  "겨울특강 Algebra 2": {
+    "온라인": "16:10~18:10",
+    "오프라인": "14:00~16:00"
+  },
+  "겨울특강 Algebra 2 심화": "16:10~18:10"
+};
+
+let enabledDays = null;
+
+function dayFilter(date) {
+  const year = date.getFullYear();
+  const month = date.getMonth();
+  const day = date.getDate();
+  
+  // 12월 1, 6, 8, 13일 비활성화
+  if (year === 2025 && month === 11) {
+    if ([1, 6, 8, 13].includes(day)) {
+      return [false, ""];
+    }
+  }
+  
+  if (!enabledDays) return [true, ""];
+  return [enabledDays.includes(date.getDay()), ""];
+}
+
+function setDatepickerEnabledDays() {
+  const courseKey = document.getElementById('course').value;
+  const c = courseInfo[courseKey];
+  if (!c) {
+    enabledDays = null;
+  } else {
+    enabledDays = c.days || null;
+  }
+  $('#startDate').datepicker('destroy');
+  $('#startDate').val('');
+  $('#startDate').datepicker({
+    dateFormat: "yy-mm-dd",
+    showButtonPanel: true,
+    changeMonth: true,
+    changeYear: true,
+    beforeShowDay: dayFilter,
+    minDate: new Date(2025, 11, 1),
+    maxDate: new Date(2026, 0, 31)
+  });
+}
+
+$.datepicker.setDefaults({
+  dateFormat: 'yy-mm-dd',
+  prevText: '이전 달',
+  nextText: '다음 달',
+  monthNames: ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'],
+  monthNamesShort: ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'],
+  dayNames: ['일','월','화','수','목','금','토'],
+  dayNamesShort: ['일','월','화','수','목','금','토'],
+  dayNamesMin: ['일','월','화','수','목','금','토'],
+  showMonthAfterYear: true,
+  yearSuffix: '년'
+});
+
+$('#startDate').datepicker({
+  dateFormat: "yy-mm-dd",
+  showButtonPanel: true,
+  changeMonth: true,
+  changeYear: true,
+  beforeShowDay: dayFilter,
+  minDate: new Date(2025, 11, 1),
+  maxDate: new Date(2026, 0, 31)
+});
+
+function applySelect2ToDuration() {
+  $('#duration').select2({
+    minimumResultsForSearch: Infinity,
+    dropdownParent: $('.form-group.duration'),
+    width: 'style',
+    language: "ko"
+  });
+}
+
+$(document).ready(function() {
+  applySelect2ToDuration();
+});
+
+function renderCourseTreeMenu() {
+  let html = '<ul>';
+  for (const grp of courseTree) {
+    html += `<li class="maincat">${grp.cat}<ul>`;
+    for (const c of grp.items)
+      html += `<li data-val="${c.val}">${c.label}</li>`;
+    html += `</ul></li>`;
+  }
+  html += '</ul>';
+  $('#courseTreeMenu').html(html);
+  let sel = $('#course'); sel.empty();
+  for (const grp of courseTree) {
+    let optg = $(`<optgroup label="${grp.cat}"></optgroup>`);
+    for (const c of grp.items) {
+      optg.append(`<option value="${c.val}">${c.label}</option>`);
+    }
+    sel.append(optg);
+  }
+}
+renderCourseTreeMenu();
+
+$('#courseSelectorBtn').on('click', function(e){
+  $('#courseSearchBox').val('');
+  $('#courseTreeMenu > ul > li').show().find('ul li').show();
+  $('#courseTreeMenu > ul > li').find('ul').hide();
+  $('#courseTreeMenu ul > li.maincat:first-child ul').show();
+  $('#courseTreeMenuWrap').toggle();
+  $(document).on('mousedown.coursemenu', function(evt){
+    if (!$(evt.target).closest('#courseTreeMenuWrap,#courseSelectorBtn').length)
+      $('#courseTreeMenuWrap').hide();
+  });
+});
+
+$('#courseTreeMenu').on('click', 'li.maincat', function(e){
+  $(this).find('ul').slideToggle(120);
+  $(this).siblings().find('ul').slideUp(100);
+  e.stopPropagation();
+});
+
+$('#courseTreeMenu').on('click', 'ul li[data-val]', function(e){
+  let courseVal = $(this).data('val');
+  let courseLabel = $(this).text();
+  $('#courseSelectorBtn').val(courseLabel);
+  $('#selectedCourseLabel').text('');
+  $('#courseSelectorBtn').data('courseval', courseVal);
+  $('#courseTreeMenuWrap').hide();
+  $('#course').val(courseVal).trigger('change');
+  e.stopPropagation();
+});
+
+$('#courseTreeMenu ul > li.maincat:first-child ul').show();
+
+$('#courseSearchBox').on('input', function(){
+  let kw = $(this).val().toLowerCase().trim();
+  $('#courseTreeMenu > ul > li').each(function(){
+    let matched = false;
+    $(this).find('ul li').each(function(){
+      if (!kw || $(this).text().toLowerCase().includes(kw)) {
+        $(this).show();
+        matched = true;
+      } else $(this).hide();
+    });
+    if (matched) {
+      $(this).show();
+      $(this).find('ul').show();
+    } else {
+      $(this).hide();
+      $(this).find('ul').hide();
+    }
+  });
+});
+
+document.getElementById('course').onchange = function() {
+  let v = this.value;
+  let box = document.getElementById('extraOptions');
+  box.innerHTML = '';
+  let startDateGroup = document.getElementById('startDateGroup');
+  
+  try { $('#duration').select2('destroy'); } catch(e){}
+  $('#duration').empty();
+
+  if (!v || !courseInfo[v]) {
+    setDatepickerEnabledDays();
+    startDateGroup.style.display = 'flex';
+    applySelect2ToDuration();
+    return;
+  }
+  
+  let c = courseInfo[v];
+  let unit = (c.durationType==='set') ? 'set' : '주';
+  document.getElementById('durationLabel').textContent = `수강 기간${unit==='set'?'(set)':''}`;
+
+  if (c.isAP) {
+    startDateGroup.style.display = 'none';
+    $('#startDate').val('');
+    
+    let html = '<div class="option-group">';
+    html += '<div class="option-row"><b>차수:</b>';
+    html += '<select id="apSession" style="width:120px;height:48px;font-size:17px;padding:0 16px;border-radius:7px;border:1px solid #bbb;">';
+    html += '<option value="1">1차</option>';
+    html += '<option value="2">2차</option>';
+    html += '<option value="3">3차</option>';
+    html += '</select></div>';
+    html += '<div id="apTimeSlotRow" style="display:none;">';
+    html += '<div class="option-row"><b>시간대:</b>';
+    html += '<label><input type="radio" name="apTimeSlot" value="오전반" checked> 오전반</label>';
+    html += '<label><input type="radio" name="apTimeSlot" value="저녁반"> 저녁반</label>';
+    html += '</div></div>';
+    html += '</div>';
+    box.innerHTML = html;
+    
+    $('#apSession').on('change', function(){
+      if($(this).val() === '3') {
+        $('#apTimeSlotRow').show();
+      } else {
+        $('#apTimeSlotRow').hide();
+      }
+    });
+    
+  } else {
+    startDateGroup.style.display = 'flex';
+    setDatepickerEnabledDays();
+    
+    if (['sat_1500', 'sat_1400', 'sat_bridge'].includes(v)) {
+      let html = '<div class="option-group">';
+      html += '<div class="option-row"><b>수업 형태:</b>';
+      html += '<label><input type="radio" name="courseType" value="온라인" checked> 온라인</label>';
+      html += '<label><input type="radio" name="courseType" value="오프라인"> 오프라인</label>';
+      html += '</div></div>';
+      box.innerHTML = html;
+    } else if (['toefl_l1', 'toefl_l2'].includes(v)) {
+      let html = '<div class="option-group">';
+      html += '<div class="option-row"><b>수업 형태:</b>';
+      html += '<label><input type="radio" name="courseType" value="온라인" checked> 온라인</label>';
+      html += '<label><input type="radio" name="courseType" value="오프라인"> 오프라인</label>';
+      html += '</div></div>';
+      box.innerHTML = html;
+    } else if (['drw_morning', 'drw_a', 'drw_b'].includes(v)) {
+      let html = '<div class="form-group" style="margin-bottom:28px;">';
+      html += '<label for="drwLevel" style="font-weight:bold;margin-right:8px;font-size:17px;min-width:110px;text-align:left;">레벨</label>';
+      html += '<select id="drwLevel" style="width:100px;height:48px;font-size:17px;padding:0 16px;border-radius:7px;border:1px solid #bbb;background:#fff;">';
+      html += '<option value="L1">L1</option>';
+      html += '<option value="L2">L2</option>';
+      html += '</select>';
+      html += '</div>';
+      box.innerHTML = html;
+    } else if (v === 'dm_alg2') {
+      let html = '<div class="option-group">';
+      html += '<div class="option-row"><b>수업 형태:</b>';
+      html += '<label><input type="radio" name="courseType" value="온라인" checked> 온라인</label>';
+      html += '<label><input type="radio" name="courseType" value="오프라인"> 오프라인</label>';
+      html += '</div></div>';
+      box.innerHTML = html;
+    }
+  }
+  
+  for(let i=c.min; i<=c.max; ++i) {
+    let label = (unit==='set') ? `${i}set` : `${i}${unit}`;
+    $('#duration').append(`<option value="${i}">${label}</option>`);
+  }
+  applySelect2ToDuration();
+};
+
+function calculateTuition() {
+  let studentName = document.getElementById('studentName').value.trim();
+  let courseKey = document.getElementById('course').value;
+  let c = courseInfo[courseKey];
+  
+  if (!studentName) return showToast('이름을 입력하세요.');
+  if (!courseKey || !c) return showToast('과목을 선택하세요.');
+  
+  let period = +document.getElementById('duration').value;
+  let discount = parseFloat(document.getElementById('discount').value);
+  let displayCourseName = c.name;
+  let durationStr = '';
+  let timeStr = "";
+  let totalFee = 0;
+  let startDate = '';
+
+  if (c.isAP) {
+    let apSession = document.getElementById('apSession')?.value;
+    if (!apSession) return showToast('차수를 선택하세요.');
+    
+    let apTimeSlot = '';
+    if (apSession === '3') {
+      apTimeSlot = document.querySelector('input[name="apTimeSlot"]:checked')?.value;
+      if (!apTimeSlot) return showToast('시간대를 선택하세요.');
+      displayCourseName = displayCourseName + ' ' + apTimeSlot;
+    }
+    
+    let sessionStartDates = {
+      '1': '2025-12-15',
+      '2': '2025-12-22',
+      '3': '2026-01-12'
+    };
+    startDate = sessionStartDates[apSession];
+    
+    let start = new Date(startDate);
+    let end = new Date(start);
+    
+    // 종료일 계산: (period-1)주 후의 같은 요일로 이동 후 종료 요일로 정렬
+    end.setDate(start.getDate() + (period - 1) * 7);
+    
+    if (courseKey === 'ap_calab') {
+      // Cal AB: 화요일 종료
+      let targetDay = 2;
+      let currentDay = end.getDay();
+      if (currentDay <= targetDay) {
+        end.setDate(end.getDate() + (targetDay - currentDay));
+      } else {
+        end.setDate(end.getDate() + (7 - currentDay + targetDay));
+      }
+    } else if (courseKey === 'ap_microecon') {
+      // Micro Econ: 토요일 종료
+      let targetDay = 6;
+      let currentDay = end.getDay();
+      if (currentDay <= targetDay) {
+        end.setDate(end.getDate() + (targetDay - currentDay));
+      } else {
+        end.setDate(end.getDate() + (7 - currentDay + targetDay));
+      }
+    } else {
+      // 일반 AP: 금요일 종료
+      let targetDay = 5;
+      let currentDay = end.getDay();
+      if (currentDay <= targetDay) {
+        end.setDate(end.getDate() + (targetDay - currentDay));
+      } else {
+        end.setDate(end.getDate() + (7 - currentDay + targetDay));
+      }
+    }
+    
+    let sm = start.getMonth()+1, sd = start.getDate(), sw = weekdayName[start.getDay()];
+    let em = end.getMonth()+1, ed = end.getDate(), ew = weekdayName[end.getDay()];
+    durationStr = `${sm}.${sd}(${sw}) ~ ${em}.${ed}(${ew}) (${period}주)`;
+    
+    let timeKey = apSession === '3' ? `3차${apTimeSlot === '오전반' ? '오전' : '저녁'}` : `${apSession}차`;
+    timeStr = timeTable[c.name][timeKey] + " (한국시간 기준)";
+    
+  } else {
+    startDate = document.getElementById('startDate').value;
+    if (!startDate) return showToast('수강 시작일을 입력하세요.');
+    
+    let courseType = document.querySelector('input[name="courseType"]:checked')?.value;
+    let drwLevel = document.getElementById('drwLevel')?.value;
+    
+    if (['sat_1500', 'sat_1400', 'sat_bridge', 'toefl_l1', 'toefl_l2', 'dm_alg2'].includes(courseKey)) {
+      if (!courseType) return showToast('수업 형태를 선택하세요.');
+      displayCourseName = displayCourseName + ' ' + courseType;
+      timeStr = timeTable[c.name][courseType] + " (한국시간 기준)";
+    } else if (['drw_morning', 'drw_a', 'drw_b'].includes(courseKey)) {
+      if (!drwLevel) return showToast('레벨을 선택하세요.');
+      if (courseKey === 'drw_morning') {
+        displayCourseName = `겨울특강 DRW 오전반 ${drwLevel}`;
+      } else if (courseKey === 'drw_a') {
+        displayCourseName = `겨울특강 DRW ${drwLevel}A`;
+      } else if (courseKey === 'drw_b') {
+        displayCourseName = `겨울특강 DRW ${drwLevel}B`;
+      }
+      timeStr = timeTable[c.name] + " (한국시간 기준)";
+    } else {
+      if (timeTable[c.name]) {
+        timeStr = timeTable[c.name] + " (한국시간 기준)";
+      }
+    }
+    
+    if (c.durationType === 'set') {
+      let start = new Date(startDate);
+      let weekGroups = [];
+      for(let i=0; i<period; i++) {
+        let sat = new Date(start);
+        sat.setDate(start.getDate() + 7*i);
+        let sun = new Date(sat);
+        sun.setDate(sat.getDate()+1);
+        weekGroups.push(`${sat.getMonth()+1}.${sat.getDate()},${sun.getMonth()+1}.${sun.getDate()}`);
+      }
+      durationStr = weekGroups.join(' / ');
+      
+      // 어썸실전은 과목명에 set 수 추가
+      if (courseKey === 'toefl_awesome') {
+        displayCourseName = displayCourseName + ' ' + period + 'set';
+      }
+    } else {
+      let start = new Date(startDate);
+      let end = new Date(start);
+      
+      // 종료일 계산: (period-1)주 후의 같은 요일로 이동 후 종료 요일로 정렬
+      end.setDate(start.getDate() + (period - 1) * 7);
+      
+      if (c.endDay !== undefined) {
+        let targetDay = c.endDay;
+        let currentDay = end.getDay();
+        if (currentDay <= targetDay) {
+          end.setDate(end.getDate() + (targetDay - currentDay));
+        } else {
+          end.setDate(end.getDate() + (7 - currentDay + targetDay));
+        }
+      } else {
+        // 기본: 금요일 종료 (월~금 수업)
+        let targetDay = 5;
+        let currentDay = end.getDay();
+        if (currentDay <= targetDay) {
+          end.setDate(end.getDate() + (targetDay - currentDay));
+        } else {
+          end.setDate(end.getDate() + (7 - currentDay + targetDay));
+        }
+      }
+      
+      let sm = start.getMonth()+1, sd = start.getDate(), sw = weekdayName[start.getDay()];
+      let em = end.getMonth()+1, ed = end.getDate(), ew = weekdayName[end.getDay()];
+      durationStr = `${sm}.${sd}(${sw}) ~ ${em}.${ed}(${ew}) (${period}주)`;
+    }
+  }
+  
+  totalFee = c.fee * period;
+  
+  let discountedFee = Math.round(totalFee * (1-discount));
+  let feeStr = discountedFee.toLocaleString() + "원";
+  if (discount > 0) {
+    feeStr += ` (${Math.round(discount*100)}% 할인)`;
+  }
+
+  document.getElementById('infoName').textContent = studentName;
+  document.getElementById('infoCourse').textContent = displayCourseName;
+  document.getElementById('infoStart').textContent = durationStr;
+  document.getElementById('infoTime').textContent = timeStr;
+  
+  // AP 과목인 경우 수강료에 환불 안내 추가
+  if (c.isAP) {
+    document.getElementById('infoFee').innerHTML = feeStr + '<br><span style="color:#c44;font-size:15px;margin-top:8px;display:inline-block;">※ AP수업은 과목별 3명 이상일시 개강됩니다. 미개강시 납부하신 수강료는 전액 환불됩니다.</span>';
+  } else {
+    document.getElementById('infoFee').textContent = feeStr;
+  }
+  
+  document.getElementById('reservationInfo').style.display = '';
+  document.getElementById('copyButton').style.display = '';
+}
+
+function showToast(msg) {
+  var t = document.getElementById("toast");
+  t.textContent = msg; t.style.visibility = "visible"; t.style.opacity = 1;
+  setTimeout(()=>{ t.style.opacity = 0; setTimeout(()=>{t.style.visibility='hidden';},500)},2000);
+}
+
+function copyReservationInfo() {
+  let name = document.getElementById('infoName').textContent;
+  let course = document.getElementById('infoCourse').textContent;
+  let period = document.getElementById('infoStart').textContent;
+  let time = document.getElementById('infoTime').textContent;
+  let fee = document.getElementById('infoFee').textContent;
+  let infoText = `감사합니다. 수강 예약 안내드립니다.\n\n`
+      + `▶학생이름: ${name}\n`
+      + `▶수강과목: ${course}\n`
+      + `▶수강기간: ${period}\n`
+      + `▶수업시간: ${time}\n`
+      + `▶수강료: ${fee}\n\n`
+      + `※ 계좌이체는 학생이름으로 입금 부탁드리며, 현금영수증 필요 시 발급받으실 휴대폰/사업자 번호를 알려주시기 바랍니다.\n`
+      + `[수강료 입금 계좌]\n신한은행 140-009-205058\n(예금주: 세한아카데미외국어학원)\n`;
+  navigator.clipboard.writeText(infoText)
+    .then(()=> showToast('예약 안내가 복사되었습니다.'))
+    .catch(()=> showToast('복사 실패!'));
+}
+</script>
+</body>
+</html>
