@@ -6,7 +6,7 @@
   <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
   <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
   
-  <link rel="stylesheet" href="style.css">
+  <!-- 캐시 무효화를 위해 style.css는 스크립트에서 동적으로 불러옵니다 -->
 </head>
 <body>
   
@@ -51,8 +51,7 @@
     </div>
 
     <div id="APCourseMultiselect" style="display:none;">
-      <div id="APCourseItemsContainer">
-        </div>
+      <div id="APCourseItemsContainer"></div>
       <div class="form-group" style="margin-top: 15px; margin-bottom: 5px;">
         <button type="button" id="addAPCourseBtn">AP 과목 추가</button>
       </div>
@@ -85,18 +84,54 @@
     <button type="button" onclick="calculateTuition()">계산하기</button>
   </form>
   
-  <div id="resultsContainer" style="display:none;">
-      </div>
+  <div id="resultsContainer" style="display:none;"></div>
   
   <button id="copyButton" onclick="copyReservationInfo()" style="display:none;">복사</button>
   <div id="toast"></div>
 
+  <!-- 외부 라이브러리 -->
   <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
   <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/i18n/jquery-ui-i18n.min.js"></script>
-  
-  <script src="data.js"></script>
-  <script src="calculator_UI_UX.js"></script>
+
+  <!-- ✅ 자동 캐시 무효화 스크립트 -->
+  <script>
+    (function() {
+      const version = new Date().getTime(); // 매번 다른 버전 (timestamp)
+      const files = [
+        { type: "css", path: "style.css" },
+        { type: "js", path: "data.js" },
+        { type: "js", path: "calculator_UI_UX.js" }
+      ];
+
+      files.forEach(file => {
+        if (file.type === "css") {
+          const link = document.createElement("link");
+          link.rel = "stylesheet";
+          link.href = `${file.path}?v=${version}`;
+          document.head.appendChild(link);
+        } else if (file.type === "js") {
+          const script = document.createElement("script");
+          script.src = `${file.path}?v=${version}`;
+          document.body.appendChild(script);
+        }
+      });
+
+      // 캐시 방지용 메타 태그 추가 (일부 브라우저 대응)
+      const meta1 = document.createElement("meta");
+      meta1.httpEquiv = "Cache-Control";
+      meta1.content = "no-cache, no-store, must-revalidate";
+      const meta2 = document.createElement("meta");
+      meta2.httpEquiv = "Pragma";
+      meta2.content = "no-cache";
+      const meta3 = document.createElement("meta");
+      meta3.httpEquiv = "Expires";
+      meta3.content = "0";
+      document.head.appendChild(meta1);
+      document.head.appendChild(meta2);
+      document.head.appendChild(meta3);
+    })();
+  </script>
 </body>
 </html>
