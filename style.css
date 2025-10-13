@@ -38,12 +38,12 @@ body {   font-family: 'Noto Sans KR', Arial, sans-serif;
       transition: transform 0.15s, box-shadow 0.15s;
       
       /* 이미지 URL 적용 */
-      background: url('https://gongu.copyright.or.kr/gongu/wrt/cmmn/wrtFileImageView.do?wrtSn=13292040&filePath=L2Rpc2sxL25ld2RhdGEvMjAyMS8yMS9DTFMxMDAwNi8xMzI5MjA0MF9XUlRfMjFfQ0xTMTAwMDZfMjAyMTEyMTNfMQ==&thumbAt=Y&thumbSe=b_tbumb&wrtTy=10006') no-repeat center center;
+      background: url('https://img.freepik.com/free-vector/flat-design-autumnal-background_52683-43406.jpg') no-repeat center center;
       background-size: cover; 
       background-color: #f7f7f7; 
       
       /* 글자 표시 및 스타일 */
-      color: #ffff00; /* 흰색 글자색 */
+      color: #e9baaa; /* 흰색 글자색 */
       font-size: 18px; 
       font-weight: bold; 
       text-align: center;
