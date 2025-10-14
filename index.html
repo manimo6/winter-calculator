@@ -35,7 +35,7 @@
       <button id="closePatchModal">×</button>
       <h3>패치내역 ver 1.0.0</h3>
       <ul>
-        <li><b><span style="color:red">계산기는 실수를 할 수 있습니다. 중요한 정보는 재차 확인해주세요</span></b></li>
+        <li><b><span style="color:red">계산기는 실수를 할 수 있습니다. <br>중요한 정보는 재차 확인해주세요</span></b></li>
         <li><b><span style="color:green">개선사항 및 버그는 정하민 주임에게 보고</span></b></li>
         <li>-------------------------------------------------------</li>
         <li>2025-10-14: 2025 겨울특강 수강료 계산기 출시</li>
@@ -47,6 +47,15 @@
     <div class="form-group">
       <label for="studentName">학생 이름</label>
       <input type="text" id="studentName" required placeholder="이름 입력">
+      
+      <!-- ✅ 녹화강의 토글 (우측 상단) -->
+      <div class="recording-toggle-container">
+        <span class="recording-label">녹화강의</span>
+        <label class="switch">
+          <input type="checkbox" id="recordingToggle">
+          <span class="slider"></span>
+        </label>
+      </div>
     </div>
     
     <div class="form-group" style="position:relative;z-index:120;" id="courseGroup">
@@ -76,6 +85,15 @@
       <div class="form-group duration">
         <label id="durationLabel" for="duration">수강 기간</label>
         <select id="duration" required></select>
+      </div>
+      
+      <!-- ✅ 녹화강의 달력 (토글 ON 시 표시) -->
+      <div id="recordingCalendarSection" class="form-group" style="display:none;">
+        <label for="recordingCalendar">녹화 수강일</label>
+        <div id="recordingCalendarWrap">
+          <div id="recordingCalendar"></div>
+          <div id="selectedRecordingDates"></div>
+        </div>
       </div>
     </div>
     
@@ -108,7 +126,7 @@
   <!-- ✅ JS 자동 캐시 무효화 (순차 로드 + 잔상 제거 완화 포함) -->
   <script>
     (function() {
-      const version = new Date().toISOString().slice(0,10).replace(/-/g,''); // 하루 단위 버전
+      const version = new Date().toISOString().slice(0,10).replace(/-/g,'');
       const loadScript = (src, callback) => {
         const s = document.createElement('script');
         s.src = `${src}?v=${version}`;
@@ -116,15 +134,12 @@
         document.body.appendChild(s);
       };
 
-      // JS 순차 로드: data.js → calculator_UI_UX.js
       loadScript('data.js', () => {
         loadScript('calculator_UI_UX.js', () => {
-          // ✅ JS까지 모두 로드된 후 본문 표시
           document.body.style.opacity = 1;
         });
       });
 
-      // 캐시 방지 메타 (일부 브라우저 대응)
       const metas = [
         { httpEquiv: 'Cache-Control', content: 'no-cache, no-store, must-revalidate' },
         { httpEquiv: 'Pragma', content: 'no-cache' },

@@ -38,7 +38,6 @@ const courseTree = [
     {val:'drw_morning', label:'겨울특강 DRW 오전'},
     {val:'drw_a', label:'겨울특강 DRW A'},
     {val:'drw_b', label:'겨울특강 DRW B'},
-    {val:'drw_l3', label:'겨울특강 DRW L3'}
   ]},
   {cat:'W올인원', items:[
     {val:'w_allinone', label:'겨울특강 Writing 올인원'}
@@ -59,25 +58,19 @@ const courseInfo = {
   sat_europe: {name:"겨울특강 SAT 유럽반", min:1, max:4, durationType:"week", fee:620000, days:[1]},
   sat_rw: {name:"겨울특강 SAT RW실전반", min:1, max:4, durationType:"week", fee:248000, days:[6], endDay:0},
   
-// --- AP 과목 섹션 수정본 ---
-ap_phy1: {name:"겨울특강 AP Phy1", min:1, max:3, durationType:"week", fee:575000, days:[1,2,3,4,5], isAP:true, endDay:5},
-ap_calbc: {name:"겨울특강 AP Cal BC", min:1, max:3, durationType:"week", fee:575000, days:[1,2,3,4,5], isAP:true, endDay:5},
-ap_calab: {name:"겨울특강 AP Cal AB", min:1, max:3, durationType:"week", fee:460000, days:[1,2,3,4,5], isAP:true, endDay:5},
-ap_precal: {name:"겨울특강 AP Pre-cal", min:1, max:3, durationType:"week", fee:575000, days:[1,2,3,4,5], isAP:true, endDay:5},
-ap_worldhis: {name:"겨울특강 AP World His", min:1, max:3, durationType:"week", fee:575000, days:[1,2,3,4,5], isAP:true, endDay:5},
-ap_bio: {name:"겨울특강 AP Bio", min:1, max:3, durationType:"week", fee:575000, days:[1,2,3,4,5], isAP:true, endDay:5},
-ap_phyc_m: {name:"겨울특강 AP Phy C-M", min:1, max:3, durationType:"week", fee:575000, days:[1,2,3,4,5], isAP:true, endDay:5},
-
-// 주3회수업
-ap_macroecon: {name:"겨울특강 AP Macro Econ", min:1, max:3, durationType:"week", fee:345000, days:[2,4,6], isAP:true, endDay:6},
-ap_microecon: {name:"겨울특강 AP Micro Econ", min:1, max:3, durationType:"week", fee:345000, days:[1,3,5], isAP:true, endDay:5},
-
-// 나머지 평일 5일 과목들
-ap_psy: {name:"겨울특강 AP Psy", min:1, max:3, durationType:"week", fee:575000, days:[1,2,3,4,5], isAP:true, endDay:5},
-ap_stat: {name:"겨울특강 AP Stat", min:1, max:3, durationType:"week", fee:575000, days:[1,2,3,4,5], isAP:true, endDay:5},
-ap_chem: {name:"겨울특강 AP Chem", min:1, max:3, durationType:"week", fee:575000, days:[1,2,3,4,5], isAP:true, endDay:5},
-ap_comsca: {name:"겨울특강 AP Com.sc A", min:1, max:3, durationType:"week", fee:575000, days:[1,2,3,4,5], isAP:true, endDay:5},
-
+  ap_phy1: {name:"겨울특강 AP Phy1", min:1, max:3, durationType:"week", fee:575000, days:[1,2,3,4,5], isAP:true, endDay:5},
+  ap_calbc: {name:"겨울특강 AP Cal BC", min:1, max:3, durationType:"week", fee:575000, days:[1,2,3,4,5], isAP:true, endDay:5},
+  ap_calab: {name:"겨울특강 AP Cal AB", min:1, max:3, durationType:"week", fee:460000, days:[1,2,3,4,5], isAP:true, endDay:5},
+  ap_precal: {name:"겨울특강 AP Pre-cal", min:1, max:3, durationType:"week", fee:575000, days:[1,2,3,4,5], isAP:true, endDay:5},
+  ap_worldhis: {name:"겨울특강 AP World His", min:1, max:3, durationType:"week", fee:575000, days:[1,2,3,4,5], isAP:true, endDay:5},
+  ap_bio: {name:"겨울특강 AP Bio", min:1, max:3, durationType:"week", fee:575000, days:[1,2,3,4,5], isAP:true, endDay:5},
+  ap_phyc_m: {name:"겨울특강 AP Phy C-M", min:1, max:3, durationType:"week", fee:575000, days:[1,2,3,4,5], isAP:true, endDay:5},
+  ap_macroecon: {name:"겨울특강 AP Macro Econ", min:1, max:3, durationType:"week", fee:345000, days:[2,4,6], isAP:true, endDay:6},
+  ap_microecon: {name:"겨울특강 AP Micro Econ", min:1, max:3, durationType:"week", fee:345000, days:[1,3,5], isAP:true, endDay:5},
+  ap_psy: {name:"겨울특강 AP Psy", min:1, max:3, durationType:"week", fee:575000, days:[1,2,3,4,5], isAP:true, endDay:5},
+  ap_stat: {name:"겨울특강 AP Stat", min:1, max:3, durationType:"week", fee:575000, days:[1,2,3,4,5], isAP:true, endDay:5},
+  ap_chem: {name:"겨울특강 AP Chem", min:1, max:3, durationType:"week", fee:575000, days:[1,2,3,4,5], isAP:true, endDay:5},
+  ap_comsca: {name:"겨울특강 AP Com.sc A", min:1, max:3, durationType:"week", fee:575000, days:[1,2,3,4,5], isAP:true, endDay:5},
   
   toefl_l1: {name:"겨울특강 TOEFL L1", min:1, max:4, durationType:"week", fee:540000, days:[1]},
   toefl_l2: {name:"겨울특강 TOEFL L2", min:1, max:4, durationType:"week", fee:540000, days:[1]},
@@ -87,7 +80,6 @@ ap_comsca: {name:"겨울특강 AP Com.sc A", min:1, max:3, durationType:"week", 
   drw_morning: {name:"겨울특강 DRW 오전", min:1, max:3, durationType:"week", fee:360000, days:[1]},
   drw_a: {name:"겨울특강 DRW A", min:1, max:3, durationType:"week", fee:360000, days:[1]},
   drw_b: {name:"겨울특강 DRW B", min:1, max:3, durationType:"week", fee:360000, days:[1]},
-  drw_l3: {name:"겨울특강 DRW L3", min:1, max:3, durationType:"week", fee:360000, days:[1]},
   
   w_allinone: {name:"겨울특강 Writing 올인원", min:1, max:3, durationType:"week", fee:480000, days:[1]},
   
@@ -127,7 +119,6 @@ const timeTable = {
   "겨울특강 DRW 오전": "10:00~13:00",
   "겨울특강 DRW A": "19:00~22:00",
   "겨울특강 DRW B": "20:00~23:00",
-  "겨울특강 DRW L3": "20:00~23:00",
   
   "겨울특강 Writing 올인원": "09:00~13:00",
   
@@ -141,4 +132,49 @@ const apSessionInfo = {
   '1': { label: '1차', start: '2025-12-15', maxDuration: 3 },
   '2': { label: '2차', start: '2025-12-22', maxDuration: 3 },
   '3': { label: '3차', start: '2026-01-12', maxDuration: 3 }
+};
+
+// ✅ 녹화강의 가능 여부 (과목별)
+const recordingAvailable = {
+  // SAT
+  sat_1500: { 온라인: true, 오프라인: false },
+  sat_1400: { 온라인: true, 오프라인: false },
+  sat_bridge: { 온라인: true, 오프라인: false },
+  sat_america: true,
+  sat_europe: true,
+  sat_rw: false, // 토일 과목
+  
+  // AP (모두 가능)
+  ap_phy1: true,
+  ap_calbc: true,
+  ap_calab: true,
+  ap_precal: true,
+  ap_worldhis: true,
+  ap_bio: true,
+  ap_phyc_m: true,
+  ap_macroecon: true,
+  ap_microecon: true,
+  ap_psy: true,
+  ap_stat: true,
+  ap_chem: true,
+  ap_comsca: true,
+  
+  // TOEFL
+  toefl_l1: { 온라인: true, 오프라인: false },
+  toefl_l2: { 온라인: true, 오프라인: false },
+  toefl_america: true,
+  toefl_awesome: false, // set 과목
+  
+  // DRW (모두 가능)
+  drw_morning: true,
+  drw_a: true,
+  drw_b: true,
+  
+  // Writing (오프라인 - 불가)
+  w_allinone: false,
+  
+  // Drill Math
+  dm_alg1: true,
+  dm_alg2: { 온라인: true, 오프라인: false },
+  dm_alg2adv: true
 };
