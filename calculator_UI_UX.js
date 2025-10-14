@@ -1121,7 +1121,7 @@ function copyReservationInfo() {
   let name = document.getElementById('studentName').value.trim();
   if (!name) return showToast('계산하기를 먼저 진행해주세요.');
 
-  let infoText = `감사합니다. 수강 예약 안내드립니다.\n\n▶ 학생이름: ${name}\n`;
+  let infoText = `감사합니다. 수강 예약 안내드립니다.\n\n▶ 학생이름: ${name}`;
 
   let isAPMultiselectMode = $('.ap-result-item').length > 1;
 
@@ -1129,7 +1129,7 @@ function copyReservationInfo() {
     const allDetails = $('#resultsContainer').data('all-details');
     
     allDetails.forEach(d => {
-      infoText += `- - - - - - - - - - - - - - - - - - - - -\n`;
+      infoText += `\n- - - - - - - - - - - - - - - - - - - - -\n`;
       infoText += `▶ 수강과목: ${d.name}\n`;
       infoText += `▶ 수강기간: ${d.duration}\n`;
       if (d.recording) {
@@ -1151,8 +1151,8 @@ function copyReservationInfo() {
     });
     
     let totalFee = $('#resultsContainer').data('total-fee') || '계산 오류';
-    infoText += `- - - - - - - - - - - - - - - - - - - - -\n`;
-    infoText += `▶ 이 수강료 (합계): ${totalFee}\n`;
+    infoText += `\n- - - - - - - - - - - - - - - - - - - - -\n`;
+    infoText += `▶ 총 수강료 (합계): ${totalFee}\n`;
     infoText += `※ AP수업은 과목별 3명 이상일시 개강됩니다. 미개강시 납부하신 수강료는 전액 환불됩니다.\n\n`;
 
   } else {
