@@ -126,7 +126,7 @@
   <!-- ✅ JS 자동 캐시 무효화 (순차 로드 + 잔상 제거 완화 포함) -->
   <script>
     (function() {
-      const version = new Date().toISOString().slice(0,10).replace(/-/g,'');
+const version = Date.now();
       const loadScript = (src, callback) => {
         const s = document.createElement('script');
         s.src = `${src}?v=${version}`;
