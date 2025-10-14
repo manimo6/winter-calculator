@@ -1121,7 +1121,7 @@ function copyReservationInfo() {
   let name = document.getElementById('studentName').value.trim();
   if (!name) return showToast('계산하기를 먼저 진행해주세요.');
 
-  let infoText = `감사합니다. 수강 예약 안내드립니다.\n\n▶ 학생이름: ${name}`;
+  let infoText = `감사합니다. 수강 예약 안내드립니다.\n\n▶ 학생이름: ${name}\n`;
 
   let isAPMultiselectMode = $('.ap-result-item').length > 1;
 
