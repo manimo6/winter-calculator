@@ -2,16 +2,12 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
-  <title>겨울특강 수강료 계산기</title>
+  <title>겨울특강 수강료 계산기 (Refactored)</title>
   <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
   <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-
-  <!-- ✅ CSS 즉시 로드 (잔상 방지용) -->
-  <link rel="preload" as="style" href="style.css?v=20251014">
-  <link rel="stylesheet" href="style.css?v=20251014">
+  <link rel="stylesheet" href="style.css">
 
   <style>
-    /* ✅ body 잔상 제거용 트릭 */
     body { 
       opacity: 0; 
       transition: opacity 0.35s ease-in-out;
@@ -33,12 +29,14 @@
   <div id="patchModal">
     <div class="modal-content">
       <button id="closePatchModal">×</button>
-      <h3>패치내역 ver 1.0.0</h3>
+      <h3>패치내역 ver 2.0.0 (Refactored)</h3>
       <ul>
         <li><b><span style="color:red">계산기는 실수를 할 수 있습니다. <br>중요한 정보는 재차 확인해주세요</span></b></li>
         <li><b><span style="color:green">개선사항 및 버그는 정하민 주임에게 보고</span></b></li>
         <li>-------------------------------------------------------</li>
-        <li>2025-10-14: 2025 겨울특강 수강료 계산기 출시</li>
+        <li>2025-10-15: v2.0.0 코드 리팩토링 (관심사 분리)</li>
+        <li> - UI, 상태, 계산 로직을 별도 파일로 분리하여 유지보수성 향상</li>
+        <li>2025-10-14: v1.0.0 2025 겨울특강 수강료 계산기 출시</li>
       </ul>
     </div>
   </div>
@@ -48,11 +46,10 @@
       <label for="studentName">학생 이름</label>
       <input type="text" id="studentName" required placeholder="이름 입력">
       
-      <!-- ✅ 녹화강의 토글 (우측 상단) -->
       <div class="recording-toggle-container">
         <span class="recording-label">녹화강의</span>
         <label class="switch">
-          <input type="checkbox" id="recordingToggle">
+          <input type="checkbox" id="recordingToggle" disabled>
           <span class="slider"></span>
         </label>
       </div>
@@ -87,7 +84,6 @@
         <select id="duration" required></select>
       </div>
       
-      <!-- ✅ 녹화강의 달력 (토글 ON 시 표시) -->
       <div id="recordingCalendarSection" class="form-group" style="display:none;">
         <label for="recordingCalendar">녹화 수강일</label>
         <div id="recordingCalendarWrap">
@@ -123,35 +119,11 @@
   <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/i18n/jquery-ui-i18n.min.js"></script>
 
-  <!-- ✅ JS 자동 캐시 무효화 (순차 로드 + 잔상 제거 완화 포함) -->
-  <script>
-    (function() {
-const version = Date.now();
-      const loadScript = (src, callback) => {
-        const s = document.createElement('script');
-        s.src = `${src}?v=${version}`;
-        s.onload = callback;
-        document.body.appendChild(s);
-      };
-
-      loadScript('data.js', () => {
-        loadScript('calculator_UI_UX.js', () => {
-          document.body.style.opacity = 1;
-        });
-      });
-
-      const metas = [
-        { httpEquiv: 'Cache-Control', content: 'no-cache, no-store, must-revalidate' },
-        { httpEquiv: 'Pragma', content: 'no-cache' },
-        { httpEquiv: 'Expires', content: '0' }
-      ];
-      metas.forEach(m => {
-        const meta = document.createElement('meta');
-        meta.httpEquiv = m.httpEquiv;
-        meta.content = m.content;
-        document.head.appendChild(meta);
-      });
-    })();
-  </script>
+  <!-- 리팩토링된 스크립트 -->
+  <script src="js/data.js" defer></script>
+  <script src="js/state.js" defer></script>
+  <script src="js/calculator.js" defer></script>
+  <script src="js/ui.js" defer></script>
+  <script src="js/main.js" defer></script>
 </body>
 </html>
