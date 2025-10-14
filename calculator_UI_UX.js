@@ -1137,21 +1137,26 @@ function copyReservationInfo() {
         infoText += `▶ 녹화강의: ${recordingText}\n`;
       }
       infoText += `▶ 수업시간: ${d.time}\n`;
-      infoText += `▶ 수강료: ${d.fee}\n`;
+
+      // ✅ 수강료와 실시간수업 사이 공백 제거
+      infoText += `▶ 수강료: ${d.fee}`;
       if (d.feeBreakdown) {
-        const breakdown = d.feeBreakdown.replace(/<div class="fee-breakdown">|<\/div>|<br>/g, '\n  ').replace(/ⓛ/g, 'ⓛ').replace(/\+ /g, '+ ');
-        infoText += breakdown;
+        const breakdown = d.feeBreakdown
+          .replace(/<div class="fee-breakdown">|<\/div>/g, '')
+          .replace(/<br>/g, '\n  ')
+          .replace(/ⓛ/g, 'ⓛ')
+          .replace(/\+ /g, '+ ');
+        infoText += '\n' + breakdown.trim() + '\n';
       }
     });
     
     let totalFee = $('#resultsContainer').data('total-fee') || '계산 오류';
     infoText += `- - - - - - - - - - - - - - - - - - - - -\n`;
-    infoText += `▶ 이 수강료 (합계): ${totalFee}\n\n`;
+    infoText += `▶ 이 수강료 (합계): ${totalFee}\n`;
     infoText += `※ AP수업은 과목별 3명 이상일시 개강됩니다. 미개강시 납부하신 수강료는 전액 환불됩니다.\n\n`;
 
   } else {
     const details = $('#resultsContainer').data('single-details');
-    
     if (!details) return showToast('계산하기를 먼저 진행해주세요.');
     
     infoText += `▶ 수강과목: ${details.course}\n`;
@@ -1161,12 +1166,17 @@ function copyReservationInfo() {
       infoText += `▶ 녹화강의: ${recordingText}\n`;
     }
     infoText += `▶ 수업시간: ${details.time}\n`;
-    infoText += `▶ 수강료: ${details.fee}\n`;
+
+    // ✅ 수강료와 실시간수업 사이 공백 제거
+    infoText += `▶ 수강료: ${details.fee}`;
     if (details.feeBreakdown) {
-      const breakdown = details.feeBreakdown.replace(/<div class="fee-breakdown">|<\/div>|<br>/g, '\n  ').replace(/ⓛ/g, 'ⓛ').replace(/\+ /g, '+ ');
-      infoText += breakdown + '\n';
+      const breakdown = details.feeBreakdown
+        .replace(/<div class="fee-breakdown">|<\/div>/g, '')
+        .replace(/<br>/g, '\n  ')
+        .replace(/ⓛ/g, 'ⓛ')
+        .replace(/\+ /g, '+ ');
+      infoText += '\n' + breakdown.trim() + '\n';
     }
-    infoText += '\n';
 
     let mainCourseKey = document.getElementById('course').value;
     if (courseInfo[mainCourseKey]?.isAP) {
@@ -1174,8 +1184,9 @@ function copyReservationInfo() {
     }
   }
   
-  infoText += `⚠️ 계좌이체는 학생이름으로 입금 부탁드리며, 현금의수증 발급받으실 휴대폰/사업자 번호를 알려주시기 바랍니다.\n`
-      + `[수강료 입금 계좌]\n신한은행 140-009-205058\n(예금주: 세한아카데미외국어학원)\n`;
+  // 💳 계좌 안내 (마지막 고정 문단)
+  infoText += `\n⚠️ 계좌이체는 학생이름으로 입금 부탁드리며, 현금의수증 발급받으실 휴대폰/사업자 번호를 알려주시기 바랍니다.\n` +
+               `[수강료 입금 계좌]\n신한은행 140-009-205058\n(예금주: 세한아카데미외국어학원)\n`;
   
   navigator.clipboard.writeText(infoText)
     .then(()=> showToast('예약 안내가 복사되었습니다.'))
