@@ -60,7 +60,7 @@ const courseInfo = {
   
   ap_phy1: {name:"겨울특강 AP Phy1", min:1, max:3, durationType:"week", fee:575000, days:[1,2,3,4,5], isAP:true, endDay:5},
   ap_calbc: {name:"겨울특강 AP Cal BC", min:1, max:3, durationType:"week", fee:575000, days:[1,2,3,4,5], isAP:true, endDay:5},
-  ap_calab: {name:"겨울특강 AP Cal AB", min:1, max:3, durationType:"week", fee:460000, days:[1,2,3,4,5], isAP:true, endDay:5},
+  ap_calab: {name:"겨울특강 AP Cal AB", min:1, max:3, durationType:"week", fee:460000, days:[1,2,3,4,5], isAP:true, endDay:2},
   ap_precal: {name:"겨울특강 AP Pre-cal", min:1, max:3, durationType:"week", fee:575000, days:[1,2,3,4,5], isAP:true, endDay:5},
   ap_worldhis: {name:"겨울특강 AP World His", min:1, max:3, durationType:"week", fee:575000, days:[1,2,3,4,5], isAP:true, endDay:5},
   ap_bio: {name:"겨울특강 AP Bio", min:1, max:3, durationType:"week", fee:575000, days:[1,2,3,4,5], isAP:true, endDay:5},
