@@ -611,7 +611,15 @@ function removeAPCourseItem(id) {
 }
 
 document.getElementById('course').onchange = function() {
+
   let v = this.value;
+
+
+
+  
+
+
+
   let box = document.getElementById('extraOptions');
   box.innerHTML = '';
   
@@ -665,7 +673,15 @@ document.getElementById('course').onchange = function() {
       html += '<div class="option-row"><b>수업 형태:</b>';
       html += '<label><input type="radio" name="courseType" value="온라인" checked> 온라인</label>';
       html += '<label><input type="radio" name="courseType" value="오프라인"> 오프라인</label>';
-      html += '</div></div>';
+      html += '</div>';
+
+      html += '<div class="option-row" style="margin-top:15px; border-top:1px solid #eee; padding-top:15px;">';
+      html += '<b>수학:</b>';
+      html += '<label><input type="radio" name="mathOption" value="include" checked> 포함</label>';
+      html += '<label><input type="radio" name="mathOption" value="exclude"> 제외</label>';
+      html += '</div>';
+
+      html += '</div>';
       box.innerHTML = html;
       $('input[name="courseType"]').on('change', updateRecordingAvailability);
     } else if (['toefl_l1', 'toefl_l2'].includes(v)) {
@@ -733,11 +749,15 @@ function getEndDate(startDate, durationWeeks, endDayOfWeek) {
   return end;
 }
 
-function getCourseDetails(cKey, duration, session, timeSlot, customStartDate) {
+function getCourseDetails(cKey, duration, session, timeSlot, customStartDate, excludeMath = false) {
   const c = courseInfo[cKey];
   let timeStr = "";
   let durationStr = "";
-  let totalFee = c.fee * duration;
+  let weeklyFee = c.fee;
+  if (['sat_1500', 'sat_1400', 'sat_bridge'].includes(cKey) && excludeMath) {
+    weeklyFee -= 120000;
+  }
+  let totalFee = weeklyFee * duration;
   
   if (c.isAP) {
     const sInfo = apSessionInfo[session];
@@ -1004,7 +1024,8 @@ function calculateTuition() {
     let period = +document.getElementById('duration').value;
     let courseType = document.querySelector('input[name="courseType"]:checked')?.value;
     let drwLevel = document.getElementById('drwLevel')?.value;
-    
+    const excludeMath = document.querySelector('input[name="mathOption"]:checked')?.value === 'exclude';
+
     if (['sat_1500', 'sat_1400', 'sat_bridge', 'toefl_l1', 'toefl_l2', 'dm_alg2'].includes(mainCourseKey) && !courseType) 
       return showToast('수업 형태를 선택하세요.');
     if (['drw_morning', 'drw_a', 'drw_b'].includes(mainCourseKey) && !drwLevel) 
@@ -1030,8 +1051,11 @@ function calculateTuition() {
     if (['sat_1500', 'sat_1400', 'sat_bridge', 'toefl_l1', 'toefl_l2', 'dm_alg2'].includes(mainCourseKey)) {
       displayCourseName = c.name + ' ' + courseType;
     }
+    if (excludeMath) {
+      displayCourseName += ' (수학 제외)';
+    }
 
-    const details = getCourseDetails(mainCourseKey, period, null, null, startDate);
+    const details = getCourseDetails(mainCourseKey, period, null, null, startDate, excludeMath);
     
     let finalFee, normalFee, recordingFee;
     let hasRecording = recordingDays > 0;
