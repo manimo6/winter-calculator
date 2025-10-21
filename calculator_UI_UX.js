@@ -1172,7 +1172,7 @@ function copyReservationInfo() {
           .replace(/<br>/g, '\n  ')
           .replace(/ⓛ/g, 'ⓛ')
           .replace(/\+ /g, '+ ');
-        infoText += '\n' + breakdown.trim() + '\n';
+        infoText += '\n' + breakdown.trim();
       }
     });
     
@@ -1194,15 +1194,16 @@ function copyReservationInfo() {
     infoText += `▶ 수업시간: ${details.time}\n`;
 
     // ✅ 수강료와 실시간수업 사이 공백 제거
-    infoText += `▶ 수강료: ${details.fee}\n`;
+    infoText += `▶ 수강료: ${details.fee}`;
     if (details.feeBreakdown) {
       const breakdown = details.feeBreakdown
         .replace(/<div class="fee-breakdown">|<\/div>/g, '')
         .replace(/<br>/g, '\n  ')
         .replace(/ⓛ/g, 'ⓛ')
         .replace(/\+ /g, '+ ');
-      infoText += '\n' + breakdown.trim() + '\n';
+      infoText += '\n' + breakdown.trim();
     }
+    infoText += '\n';
 
     let mainCourseKey = document.getElementById('course').value;
     if (courseInfo[mainCourseKey]?.isAP) {
